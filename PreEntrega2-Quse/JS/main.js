@@ -43,10 +43,12 @@ do {
 
         //CLASS CREAR SERVICIOS CONTRATADOS Y SE GUARDAN EN SERVICIO DE "DATOS CLIENTE"---------------
         class EventoContratado {
+            nombreEvento = "";
             servicio = "";
             precio = 0;
 
-            constructor(servicio, precio) {
+            constructor(nombreEvento, servicio, precio) {
+                this.nombreEvento = nombreEvento;
                 this.servicio = servicio;
                 this.precio = precio;
             }
@@ -139,7 +141,7 @@ do {
                 let evento;
 
                 if (seleccionarServicio < eventoBoda.length && seleccionarServicio >= 0) {
-                    evento = new EventoContratado(eventoBoda[seleccionarServicio].servicio, eventoBoda[seleccionarServicio].precio);
+                    evento = new EventoContratado(eventoBoda[seleccionarServicio].nombreEvento, eventoBoda[seleccionarServicio].servicio, eventoBoda[seleccionarServicio].precio);
                     evento.agregarEvento();
                     evento.agregarCosto();
                     costo = eventosContratados[indexCliente].costoTotal.reduce((acumulador, valorActual) => acumulador + valorActual, 0)
@@ -200,12 +202,12 @@ do {
             1_ DNI CLIENTE
             2_ NOMBRE CLIENTE
             3_ APELLIDO CLIENTE
+            FILTRAR POR EVENTO:
+                    4_BODA
             
             0_PARA SALIR`))
 
-            let filtroNombre = "";
-            let filtroApellido = "";
-            let filtroDni = "";
+            let filtroCliente = "";
             let filtroServicio = "";
             let index = 0;
 
@@ -214,14 +216,18 @@ do {
                     alert("NO SE ENCONTRO NINGUN DATO")
                 } else {
                     for (index = 0; index < parametro.length; index++) {
-                        filtroNombre = parametro[index].nombre;
-                        filtroApellido = parametro[index].apellido;
-                        filtroDni = parametro[index].dni;
+                        filtroCliente += `Nombre: ${parametro[index].nombre}\nApellildo: ${parametro[index].apellido}\nDNI: ${parametro[index].dni}\n`;
+
                         for (let e = 0; e < parametro[index].servicio.length; e++) {
-                            filtroServicio += `_` + parametro[index].servicio[e].servicio + `\n`;
+                            filtroServicio += `_ ${parametro[index].servicio[e].servicio}\n`;
                         }
+
+                        filtroCliente += filtroServicio + "\n";
+
+                        filtroServicio = "";
+
                     }
-                    alert(`Nombre: ${filtroNombre}\nApellido: ${filtroApellido}\nDNI: ${filtroDni}\nServicios:\n${filtroServicio}`)
+                    alert(filtroCliente);
                 }
             }
 
@@ -252,6 +258,10 @@ do {
                             filtrar(filtro);
                         }
                     } while (filtro.length === 0 && buscador !== "0");
+                    break;
+                case 4:
+                    filtro = eventosContratados.filter(acumulador => acumulador.servicio[0].nombreEvento === "Boda");
+                    filtrar(filtro);
                     break;
                 case 0:
                     alert("SESION CERRADA")
